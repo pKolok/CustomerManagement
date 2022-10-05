@@ -14,11 +14,19 @@ namespace CustomerManagement.Data
     
     public partial class Order
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Order()
+        {
+            this.Items = new HashSet<Item>();
+        }
+    
         public int Id { get; set; }
-        public int ItemID { get; set; }
         public System.DateTime OrderDate { get; set; }
         public decimal TotalPrice { get; set; }
+        public int CustomerID { get; set; }
     
-        public virtual Item Item { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Items { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

@@ -1,0 +1,12 @@
+C:\Users\panou\Desktop\Validata\CustomerManagement\bin\Debug\CustomerManagement.exe.config
+C:\Users\panou\Desktop\Validata\CustomerManagement\bin\Debug\CustomerManagement.exe
+C:\Users\panou\Desktop\Validata\CustomerManagement\bin\Debug\CustomerManagement.pdb
+C:\Users\panou\Desktop\Validata\CustomerManagement\bin\Debug\EntityFramework.dll
+C:\Users\panou\Desktop\Validata\CustomerManagement\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\panou\Desktop\Validata\CustomerManagement\bin\Debug\EntityFramework.xml
+C:\Users\panou\Desktop\Validata\CustomerManagement\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\panou\Desktop\Validata\CustomerManagement\obj\Debug\CustomerManagement.csproj.AssemblyReference.cache
+C:\Users\panou\Desktop\Validata\CustomerManagement\obj\Debug\CustomerManagement.csproj.CoreCompileInputs.cache
+C:\Users\panou\Desktop\Validata\CustomerManagement\obj\Debug\CustomerManagement.csproj.CopyComplete
+C:\Users\panou\Desktop\Validata\CustomerManagement\obj\Debug\CustomerManagement.exe
+C:\Users\panou\Desktop\Validata\CustomerManagement\obj\Debug\CustomerManagement.pdb

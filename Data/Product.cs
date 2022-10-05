@@ -17,5 +17,8 @@ namespace CustomerManagement.Data
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
+        public int ItemID { get; set; }
+    
+        public virtual Item Item { get; set; }
     }
 }

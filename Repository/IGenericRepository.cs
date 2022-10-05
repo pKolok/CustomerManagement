@@ -12,7 +12,8 @@ namespace CustomerManagement.Repository
         T GetById(object id);
         void Insert(T obj);
         void Update(T obj);
-        void Delete(object id);
-        void Save();
+        //void Delete(object id);
+        void Delete(T obj);
+        //void Save();
     }
 }

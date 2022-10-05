@@ -4,12 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6bb41f8d36cd4e6784ffe265ead2b6ce" Name="Diagram1">
-        <EntityTypeShape EntityType="CustomerManagementDBModel.Customer" Width="1.5" PointX="0.5" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="CustomerManagementDBModel.Item" Width="1.5" PointX="5.5" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="CustomerManagementDBModel.Order" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="CustomerManagementDBModel.Product" Width="1.5" PointX="8.125" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="CustomerManagementDBModel.FK_Order_Item" ManuallyRouted="false" />
+      <Diagram DiagramId="e47ca617a1134367a4dc139c3779dae3" Name="Diagram1">
+        <EntityTypeShape EntityType="CustomerManagementDBModel.Customer" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CustomerManagementDBModel.Item" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CustomerManagementDBModel.Order" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CustomerManagementDBModel.Product" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="CustomerManagementDBModel.FK_Item_ToOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="CustomerManagementDBModel.FK_Product_ToItem" ManuallyRouted="false" />
+        <AssociationConnector Association="CustomerManagementDBModel.FK_Order_ToCustomer" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
