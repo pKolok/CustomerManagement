@@ -14,19 +14,12 @@ namespace CustomerManagement.Data
     
     public partial class Item
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Item()
-        {
-            this.Products = new HashSet<Product>();
-        }
-    
         public int Id { get; set; }
-        public string Product { get; set; }
+        public string ProductName { get; set; }
+        public decimal ProductPrice { get; set; }
         public int Quantity { get; set; }
         public int OrderID { get; set; }
     
         public virtual Order Order { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Product> Products { get; set; }
     }
 }

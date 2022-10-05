@@ -1,11 +1,8 @@
 ﻿using CustomerManagement.Data;
 using CustomerManagement.UnitOfWork;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomerManagement.Repository
 {
@@ -13,8 +10,6 @@ namespace CustomerManagement.Repository
         : IGenericQueriesRepository<T> where T : class
     {
         private IDbSet<T> _entities;
-        //private string _errorMessage = string.Empty;
-        //private bool _isDisposed;
 
         public GenericQueriesRepository(IUnitOfWork<DBEntities> unitOfWork)
             : this(unitOfWork.Context)
@@ -23,7 +18,6 @@ namespace CustomerManagement.Repository
 
         public GenericQueriesRepository(DBEntities _dBEntities)
         {
-            //_isDisposed = false;
             dBEntities = _dBEntities;
         }
 
@@ -39,13 +33,6 @@ namespace CustomerManagement.Repository
             get { return _entities ?? (_entities = dBEntities.Set<T>()); }
         }
 
-        //public void Dispose()
-        //{
-        //    if (dBEntities != null)
-        //        dBEntities.Dispose();
-        //    //_isDisposed = true;
-        //}
-
         public IEnumerable<T> GetAll()
         {
             return Entities.ToList();
@@ -53,10 +40,17 @@ namespace CustomerManagement.Repository
 
         public T GetById(object id)
         {
-            int count = Entities.ToList().Count();   // TODO temp
-
             return Entities.Find(id);
         }
 
+        public IEnumerable<Order> GetByCustmerIDByOrderDate(int id)
+        {
+            var query = from order in dBEntities.Orders.AsEnumerable()
+                        where order.CustomerID == id
+                        orderby order.OrderDate
+                        select order;
+
+            return query;
+        }
     }
 }

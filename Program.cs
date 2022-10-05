@@ -1,15 +1,11 @@
 ﻿using CustomerManagement.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomerManagement
 {
     class Program
     {
-        //static void Main(string[] args)
         static void Main()
         {
             Controller.Controller controller = new Controller.Controller();
@@ -17,7 +13,7 @@ namespace CustomerManagement
             /* ---------- Customer ---------- */
             // Create
             Customer natalie = new Customer()
-            { 
+            {
                 Firstname = "Nataly",
                 Lastname = "Portman",
                 Address = "32 Valhala Ave.",
@@ -36,15 +32,15 @@ namespace CustomerManagement
 
             // Update
             natalie.Firstname = "Natalie";
-            controller.updateCustomer(natalie);
+            controller.UpdateCustomer(natalie);
 
             // Read
             Customer x = controller.findCustomerById(natalie.Id);
-            Customer y = controller.findCustomerById(hugh.Id);
+            Customer y = controller.findCustomerById(5);
 
             // Delete
-            //controller.deleteCustomer(controller.findCustomerById(natalie.Id));
-            //controller.deleteCustomer(controller.findCustomerById(hugh.Id));
+            //controller.DeleteCustomer(controller.findCustomerById(natalie.Id));
+            //controller.DeleteCustomer(controller.findCustomerById(hugh.Id));
             /* ------------------------------ */
 
 
@@ -52,57 +48,91 @@ namespace CustomerManagement
             // Create
             Order computerOrder = new Order()
             {
-                OrderDate = new DateTime(2022, 10, 03),
-                Customer = natalie,
+                OrderDate = new DateTime(2022, 10, 05),
+                Customer = natalie
             };
-            controller.addOrder(computerOrder);
+            controller.AddOrder(computerOrder);
+
+            Order bicycleOrder = new Order()
+            {
+                OrderDate = new DateTime(2022, 10, 02),
+                Customer = natalie
+            };
+            controller.AddOrder(bicycleOrder);
 
             // Update
-            computerOrder.OrderDate = new DateTime(2022, 10, 04);
-            controller.updateOrder(computerOrder);
+            //computerOrder.OrderDate = new DateTime(2022, 10, 01);
+            //controller.UpdateOrder(computerOrder);
+            //computerOrder.Customer = hugh;
+            //controller.UpdateOrder(computerOrder);
 
             // Read
-            Order z = controller.findOrderById(computerOrder.Id);
+            Order aOrder = controller.FindOrderById(computerOrder.Id);
 
             // Delete
-            //controller.deleteOrder(controller.findOrderById(computerOrder.Id));
+            //controller.DeleteOrder(controller.findOrderById(computerOrder.Id));
             /* --------------------------- */
 
 
             /* ---------- Item ---------- */
+            // Create
             Item mainComputerItem = new Item()
             {
                 Order = computerOrder,
-                //OrderID = computerOrder.Id
+                ProductName = "Intel Pentium IV",
+                ProductPrice = Convert.ToDecimal(500.00),
+                Quantity = 1
             };
-            controller.addItem(mainComputerItem);
+            controller.AddItem(mainComputerItem);
 
             Item screenItem = new Item()
             {
                 Order = computerOrder,
-                //OrderID = computerOrder.Id
+                ProductName = "Samsung",
+                ProductPrice = Convert.ToDecimal(300.00),
+                Quantity = 2
             };
-            controller.addItem(screenItem);
+            controller.AddItem(screenItem);
+
+            Item bicycleSkeletonItem = new Item()
+            {
+                Order = bicycleOrder,
+                ProductName = "Ideal Zig-zag",
+                ProductPrice = Convert.ToDecimal(500.00),
+                Quantity = 1
+            };
+            controller.AddItem(bicycleSkeletonItem);
+
+            Item bicycleBrakeItem = new Item()
+            {
+                Order = bicycleOrder,
+                ProductName = "Shimano breaks",
+                ProductPrice = Convert.ToDecimal(50.50),
+                Quantity = 2
+            };
+            controller.AddItem(bicycleBrakeItem);
+
+            // Update
+            mainComputerItem.ProductPrice = Convert.ToDecimal(600.00);
+            controller.UpdateItem(mainComputerItem);
+            screenItem.ProductPrice = Convert.ToDecimal(250.00);
+            controller.UpdateItem(screenItem);
+            screenItem.Quantity = 4;
+            controller.UpdateItem(screenItem);
+
+            // Read
+            Item aItem = controller.FindItemById(mainComputerItem.Id);
+            Item bItem = controller.FindItemById(screenItem.Id);
+
+            // Delete
+            //controller.DeleteItem(aItem);
+            //controller.DeleteItem(bItem);
 
             /* -------------------------- */
 
-
-            /* ---------- Product ---------- */
-            Product mainComputerProduct = new Product()
-            {
-                Name = "Intel Pentium IV",
-                Price = Convert.ToDecimal(659.99),
-                Item = mainComputerItem
-            };
-            controller.addProduct(mainComputerProduct);
-
-            Product screenProduct = new Product()
-            {
-                Name = "Samsung",
-                Price = Convert.ToDecimal(299.90),
-                Item = screenItem
-            };
-            /* ----------------------------- */
+            /* ---------- Query ---------- */
+            List<Order> orders = controller.GetCustomersOrdersByOrderDate(natalie);
+            /* --------------------------- */
 
         }
     }

@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomerManagement.Repository
 {
@@ -50,8 +48,6 @@ namespace CustomerManagement.Repository
                     throw new ArgumentNullException("entity");
 
                 Entities.Add(entity);
-
-                int count = Entities.ToList().Count();   // TODO temp
 
                 if (Context == null || _isDisposed)
                     Context = new DBEntities();
@@ -112,8 +108,6 @@ namespace CustomerManagement.Repository
                     Context = new DBEntities();
 
                 SetEntryModified(entity);
-
-                int count = Entities.ToList().Count();   // TODO temp
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -139,11 +133,7 @@ namespace CustomerManagement.Repository
                 if (Context == null || _isDisposed)
                     Context = new DBEntities();
 
-                int count = Entities.ToList().Count();   // TODO temp
-
                 Entities.Remove(entity);
-
-                count = Entities.ToList().Count();   // TODO temp
             }
             catch (DbEntityValidationException dbEx)
             {

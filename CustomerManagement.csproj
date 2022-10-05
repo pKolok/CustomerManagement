@@ -77,25 +77,12 @@
     <Compile Include="Data\Order.cs">
       <DependentUpon>DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Data\Product.cs">
-      <DependentUpon>DB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\CustomerRepository.cs" />
     <Compile Include="Repository\GenericCommandsRepository.cs" />
     <Compile Include="Repository\GenericQueriesRepository.cs" />
-    <Compile Include="Repository\GenericRepository.cs" />
-    <Compile Include="Repository\ICustomerRepository.cs" />
     <Compile Include="Repository\IGenericCommandsRepository.cs" />
     <Compile Include="Repository\IGenericQueriesRepository.cs" />
-    <Compile Include="Repository\IGenericRepository.cs" />
-    <Compile Include="Repository\IItemRepository.cs" />
-    <Compile Include="Repository\IOrderRepository.cs" />
-    <Compile Include="Repository\IProductRepository.cs" />
-    <Compile Include="Repository\ItemRepository.cs" />
-    <Compile Include="Repository\OrderRepository.cs" />
-    <Compile Include="Repository\ProductRepository.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
   </ItemGroup>

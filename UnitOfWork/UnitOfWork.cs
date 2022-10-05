@@ -1,7 +1,5 @@
 ﻿using CustomerManagement.Data;
-using CustomerManagement.Repository;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 
@@ -15,7 +13,6 @@ namespace CustomerManagement.UnitOfWork
         private bool _disposed;
         private string _errorMessage = string.Empty;
         private DbContextTransaction _objTran;
-        private Dictionary<string, object> _repositories;
 
         public UnitOfWork()
         {
@@ -73,22 +70,5 @@ namespace CustomerManagement.UnitOfWork
                     context.Dispose();
             _disposed = true;
         }
-
-        //public GenericRepository<T> GenericRepository<T>() where T : class
-        //{
-        //    if (_repositories == null)
-        //        _repositories = new Dictionary<string, object>();
-        //
-        //    var type = typeof(T).Name;
-        //
-        //    if (!_repositories.ContainsKey(type))
-        //    {
-        //        var repositoryType = typeof(GenericRepository<T>);
-        //        var repositoryInstance = Activator.CreateInstance(
-        //            repositoryType.MakeGenericType(typeof(T)), context);
-        //        _repositories.Add(type, repositoryInstance);
-        //    }
-        //    return (GenericRepository<T>)_repositories[type];
-        //}
     }
 }

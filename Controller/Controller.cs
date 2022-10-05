@@ -4,8 +4,6 @@ using CustomerManagement.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomerManagement.Controller
 {
@@ -19,8 +17,6 @@ namespace CustomerManagement.Controller
         private GenericCommandsRepository<Order> orderCommandsRepository;
         private GenericQueriesRepository<Item> itemQueriesRepository;
         private GenericCommandsRepository<Item> itemCommandsRepository;
-        private GenericQueriesRepository<Product> productQueriesRepository;
-        private GenericCommandsRepository<Product> productCommandsRepository;
 
         public Controller()
         {
@@ -37,10 +33,6 @@ namespace CustomerManagement.Controller
                 = new GenericQueriesRepository<Item>(unitOfWork);
             itemCommandsRepository 
                 = new GenericCommandsRepository<Item>(unitOfWork);
-            productQueriesRepository 
-                = new GenericQueriesRepository<Product>(unitOfWork);
-            productCommandsRepository 
-                = new GenericCommandsRepository<Product>(unitOfWork);
         }
 
         // ---------- API calls ---------- //
@@ -48,7 +40,7 @@ namespace CustomerManagement.Controller
         /// <summary>
         /// Add a new Customer into the database. 
         /// <para>Customer must have Firstname, Lastname, Address
-        /// and Postcode attributes. If either one is missing nothing is added.
+        /// and Postcode attributes. If either one is missing nothing is added
         /// to the database </para>
         /// </summary>
         /// <param name="_customer"></param>        
@@ -73,7 +65,7 @@ namespace CustomerManagement.Controller
         /// nothing happens.</para>
         /// </summary>
         /// <param name="_customer"></param>
-        public void updateCustomer(Customer _customer)
+        public void UpdateCustomer(Customer _customer)
         {
             try
             {
@@ -94,7 +86,7 @@ namespace CustomerManagement.Controller
         /// nothing is deleted.</para>
         /// </summary>
         /// <param name="_customer"></param>
-        public void deleteCustomer(Customer _customer)
+        public void DeleteCustomer(Customer _customer)
         {
             try
             {
@@ -111,6 +103,8 @@ namespace CustomerManagement.Controller
 
         /// <summary>
         /// Returns a Customer from the Customer ID.
+        /// <para>If customer ID does not match an ID in the database,
+        /// null is returned</para>
         /// </summary>
         /// <param name="_customerId"></param>
         /// <returns>Customer</returns>
@@ -127,7 +121,7 @@ namespace CustomerManagement.Controller
         /// added to the database.</para>
         /// </summary>
         /// <param name="_order"></param>
-        public void addOrder(Order _order)
+        public void AddOrder(Order _order)
         {
             // If _order does not have an OrderDate assigned the min is given.
             if (_order.OrderDate == DateTime.MinValue)
@@ -152,7 +146,7 @@ namespace CustomerManagement.Controller
         /// nothing happens.</para>
         /// </summary>
         /// <param name="_order"></param>
-        public void updateOrder(Order _order)
+        public void UpdateOrder(Order _order)
         {
             try
             {
@@ -173,7 +167,7 @@ namespace CustomerManagement.Controller
         /// nothing is deleted.</para>
         /// </summary>
         /// <param name="_order"></param>
-        public void deleteOrder(Order _order)
+        public void DeleteOrder(Order _order)
         {
             try
             {
@@ -190,25 +184,46 @@ namespace CustomerManagement.Controller
 
         /// <summary>
         /// Returns an Order from the Order ID.
+        /// <para>If Order ID does not match an ID in the database,
+        /// null is returned</para>
         /// </summary>
         /// <param name="_orderId"></param>
         /// <returns>Order</returns>
-        public Order findOrderById(int _orderId)
+        public Order FindOrderById(int _orderId)
         {
             return orderQueriesRepository.GetById(_orderId);
         }
 
-        
+
         /// <summary>
-        /// 
+        /// Add an Item to the database.
+        /// <para>The Item must have a Product Name, a Product Price and 
+        /// a Quantity attributes. If either one is missing, or has an illegal
+        /// value, nothing is added to the database.</para>
+        /// <para> - Quantity must be at least 1.</para>
+        /// <para> - Product Price must be greater or equal to zero.</para>
+        /// <para>Adding an Item updates the Final Price of the Order
+        /// the Item belongs to</para>
         /// </summary>
         /// <param name="_item"></param>
-        public void addItem(Item _item)
+        public void AddItem(Item _item)
         {
+            // Prevent illegal values
+            if (_item.Quantity < 1 || _item.ProductPrice < 0)
+                return;
+
             try
             {
                 unitOfWork.CreateTransaction();
+                
+                // First insert item
                 itemCommandsRepository.Insert(_item);
+
+                // Then update order's final price
+                Order order = _item.Order;
+                order.TotalPrice += _item.ProductPrice * _item.Quantity;
+                orderCommandsRepository.Update(order);
+
                 unitOfWork.Save();
                 unitOfWork.Commit();
             }
@@ -222,14 +237,29 @@ namespace CustomerManagement.Controller
         /// Update an Item in the database.
         /// <para>The Item must exist in the database. If it does not,
         /// nothing happens.</para>
+        ///<para>Updating an Item updates the Final Price of the Order
+        /// the Item belongs to</para>
         /// </summary>
         /// <param name="_item"></param>
-        public void updateItem(Item _item)
+        public void UpdateItem(Item _item)
         {
             try
             {
                 unitOfWork.CreateTransaction();
+
+                // First update item
                 itemCommandsRepository.Update(_item);
+                
+                // Then update order's final price
+                Order order = _item.Order;
+                decimal totalPrice = Convert.ToDecimal(0.0);
+                foreach (Item item in order.Items)
+                    if (item.Id == _item.Id)
+                        totalPrice += _item.ProductPrice * _item.Quantity;
+                    else
+                        totalPrice += item.ProductPrice * item.Quantity;
+                order.TotalPrice = totalPrice;
+                
                 unitOfWork.Save();
                 unitOfWork.Commit();
             }
@@ -243,14 +273,28 @@ namespace CustomerManagement.Controller
         /// Delete provided Item from the database.
         /// <para>Item must exist in the database. If it does not, 
         /// nothing is deleted.</para>
+        ///<para>Deleting an Item updates the Final Price of the Order
+        /// the Item belongs to</para>
         /// </summary>
         /// <param name="_item"></param>
-        public void deleteItem(Item _item)
+        public void DeleteItem(Item _item)
         {
             try
             {
                 unitOfWork.CreateTransaction();
+
+                // Save item's order, price and quantity
+                Order order = _item.Order;
+                decimal itemsPrice = _item.ProductPrice;
+                int itemsQuantity = _item.Quantity;
+
+                // FIrst delete item
                 itemCommandsRepository.Delete(_item);
+
+                // Then update order's final price
+                order.TotalPrice -= itemsPrice * itemsQuantity;
+                orderCommandsRepository.Update(order);
+
                 unitOfWork.Save();
                 unitOfWork.Commit();
             }
@@ -262,84 +306,27 @@ namespace CustomerManagement.Controller
 
         /// <summary>
         /// Returns an Item from the Item ID.
+        /// <para>If Item ID does not match an ID in the database,
+        /// null is returned</para>
         /// </summary>
         /// <param name="_itemId"></param>
         /// <returns>Item</returns>
-        public Item findItemById(int _itemId)
+        public Item FindItemById(int _itemId)
         {
             return itemQueriesRepository.GetById(_itemId);
         }
 
-
         /// <summary>
-        /// 
+        /// Return a list of Orders by Customer _customer sorted by Order Date 
+        /// in ascending order.
         /// </summary>
-        /// <param name="_product"></param>
-        public void addProduct(Product _product)
+        /// <param name="_customer"></param>
+        /// <returns></returns>
+        public List<Order> GetCustomersOrdersByOrderDate(Customer _customer)
         {
-            try
-            {
-                unitOfWork.CreateTransaction();
-                productCommandsRepository.Insert(_product);
-                unitOfWork.Save();
-                unitOfWork.Commit();
-            }
-            catch (Exception)
-            {
-                unitOfWork.Rollback();
-            }
-        }
-
-        /// <summary>
-        /// Update an Product in the database.
-        /// <para>The Product must exist in the database. If it does not,
-        /// nothing happens.</para>
-        /// </summary>
-        /// <param name="_product"></param>
-        public void updateProduct(Product _product)
-        {
-            try
-            {
-                unitOfWork.CreateTransaction();
-                productCommandsRepository.Update(_product);
-                unitOfWork.Save();
-                unitOfWork.Commit();
-            }
-            catch (Exception)
-            {
-                unitOfWork.Rollback();
-            }
-        }
-
-        /// <summary>
-        /// Delete provided Product from the database.
-        /// <para>Product must exist in the database. If it does not, 
-        /// nothing is deleted.</para>
-        /// </summary>
-        /// <param name="_product"></param>
-        public void deleteProduct(Product _product)
-        {
-            try
-            {
-                unitOfWork.CreateTransaction();
-                productCommandsRepository.Delete(_product);
-                unitOfWork.Save();
-                unitOfWork.Commit();
-            }
-            catch (Exception)
-            {
-                unitOfWork.Rollback();
-            }
-        }
-
-        /// <summary>
-        /// Returns a Product from the Product ID.
-        /// </summary>
-        /// <param name="_productId"></param>
-        /// <returns>Product</returns>
-        public Product findProductById(int _productId)
-        {
-            return productQueriesRepository .GetById(_productId);
+            List<Order> orders = orderQueriesRepository
+                .GetByCustmerIDByOrderDate(_customer.Id).ToList();
+            return orders;
         }
     }
 }
